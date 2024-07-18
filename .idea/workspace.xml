@@ -4,16 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="500be338-3180-4f12-afdb-c6f775c2ae72" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/ARMcoding.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/train_atari_arm.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wrapplib/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wrapplib/wrapper.py" afterDir="false" />
+    <list default="true" id="500be338-3180-4f12-afdb-c6f775c2ae72" name="Changes" comment="部分可观环境包装（基础版）">
+      <change afterPath="$PROJECT_DIR$/wrapplib/Network.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/wrapplib/discreta_arm.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/wrapplib/policy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/wrapplib/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_atari_arm.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_atari_arm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wrapplib/sample.py" beforeDir="false" afterPath="$PROJECT_DIR$/wrapplib/sample.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wrapplib/wrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/wrapplib/wrapper.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,9 +40,12 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.discreta_arm.executor": "Debug",
     "Python.test.executor": "Run",
-    "Python.train_atari_arm.executor": "Run",
+    "Python.train_atari_arm.executor": "Debug",
+    "Python.wrapper.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "master",
     "last_opened_file_path": "D:/Python_project/ARM/arm-pytorch",
     "node.js.detected.package.eslint": "true",
@@ -51,11 +53,34 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager" selected="Python.train_atari_arm">
+    <configuration name="discreta_arm" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ARMcoding" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/wrapplib" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/wrapplib/discreta_arm.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ARMcoding" />
       <option name="ENV_FILES" value="" />
@@ -102,9 +127,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="wrapper" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ARMcoding" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/wrapplib" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/wrapplib/wrapper.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.train_atari_arm" />
+        <item itemvalue="Python.wrapper" />
+        <item itemvalue="Python.discreta_arm" />
         <item itemvalue="Python.test" />
       </list>
     </recent_temporary>
@@ -127,12 +177,37 @@
       <updated>1720872921257</updated>
       <workItem from="1720872922639" duration="687000" />
       <workItem from="1720873643723" duration="423000" />
-      <workItem from="1720874084117" duration="20856000" />
+      <workItem from="1720874084117" duration="22555000" />
+      <workItem from="1720952225719" duration="97728000" />
     </task>
+    <task id="LOCAL-00001" summary="部分可观环境包装（基础版）">
+      <option name="closed" value="true" />
+      <created>1720951861426</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1720951861426</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="部分可观环境包装（基础版）" />
+    <option name="LAST_COMMIT_MESSAGE" value="部分可观环境包装（基础版）" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -143,15 +218,31 @@
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/train_atari_arm.py</url>
-          <line>41</line>
-          <option name="timeStamp" value="9" />
+          <url>file://$PROJECT_DIR$/wrapplib/discreta_arm.py</url>
+          <line>150</line>
+          <option name="timeStamp" value="41" />
         </line-breakpoint>
       </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="observation_kpns" language="Python" />
+        <watch expression="v_rets" language="Python" />
+        <watch expression="nsteps_discount*target_v_b" language="Python" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ARMcoding$test.coverage" NAME="test Coverage Results" MODIFIED="1720943251180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ARMcoding$train_atari_arm.coverage" NAME="train_atari_arm Coverage Results" MODIFIED="1720948237442" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ARMcoding$wrapper.coverage" NAME="wrapper Coverage Results" MODIFIED="1721273207028" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/wrapplib" />
+    <SUITE FILE_PATH="coverage/ARMcoding$discreta_arm.coverage" NAME="discreta_arm Coverage Results" MODIFIED="1721225756636" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/wrapplib" />
+    <SUITE FILE_PATH="coverage/ARMcoding$train_atari_arm.coverage" NAME="train_atari_arm Coverage Results" MODIFIED="1721285605587" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -1,7 +1,7 @@
 import gym
 import numpy as np
 from collections import  deque
-
+import torchvision
 class SkipFrameEnv(gym.Wrapper):
     def __init__(self,env=None,skip=2):
         '''
@@ -43,7 +43,7 @@ class PreprocAtariPongMask(gym.ObservationWrapper):
         self.observation_space=gym.spaces.Box(low=0,high=255,shape=(210,160,3))
         #gym.spaces.Box 是用来定义一个连续空间的类，它表示在给定范围内的所有 n 维数组的空间。这种空间类型常用于定义观测空间（observations space）和动作空间（action space），特别是在涉及视觉输入或多维连续动作的环境中。
     def observation(self,obs):
-        if obs.size==210*160*3:
+        if obs.size==210*160*3:#该属性返回向量中所有标量的个数
             img=np.reshape(obs,(210,160,3))
         else:
             assert False,"Unknown resolution[未知的分辨率]: {}".format(obs.resize)
@@ -75,6 +75,16 @@ class LazyFrames(object):
 
         return out
 
+class Preprecess(object):
+    def __init__(self):
+        self.pre_torchvision = torchvision.transforms.Compose([torchvision.transforms.ToPILImage(),
+                                                      torchvision.transforms.Grayscale(),
+                                                      torchvision.transforms.Resize(
+                                                          (84, 84)),
+                                                      torchvision.transforms.ToTensor()])
+    # remove channels and convert to numpy
+    def __call__(self,img):
+        return self.pre_torchvision(img).numpy()
 class StackFrameEnv(gym.Wrapper):
     def __init__(self,env=None,history_len=1):
         super(StackFrameEnv,self).__init__(env)
@@ -85,6 +95,7 @@ class StackFrameEnv(gym.Wrapper):
         --------
         baselines.common.atari_wrappers.LazyFrames
         """
+        self.preprogress=Preprecess()
         self.history_len=history_len
         self.frames=deque((),maxlen=self.history_len)#使用了 collections 模块中的 deque 类来初始化一个双端队列（deque），具有固定的最大长度 k。这个双端队列被用来存储有限数量的元素（在这个上下文中可能是图像帧或其他数据），并且自动管理其大小，以确保不超过设定的最大长度。
         #[]：这是传递给 deque 的初始迭代器。在这个例子中，deque 是用一个空列表初始化的，意味着它一开始是空的。
@@ -99,12 +110,15 @@ class StackFrameEnv(gym.Wrapper):
 
     def reset(self):
         observation,info=self.env.reset()
+
+        observation=self.preprogress(observation)
         for i in range(self.history_len):
             self.frames.append(observation)
         return self._get_ob()
 
     def step(self,action):
         observation,reward,terminated,truncated,info=self.env.step(action)
+        observation=self.preprogress(observation)
         self.frames.append(observation)
         return self._get_ob(),reward,terminated,truncated,info
 
