@@ -1,18 +1,20 @@
 import gym
 import numpy as np
 import torch
+import os
 import torch.nn.functional as F
 from wrapplib.sample import SampleBatch,SampleBatchCache
 from wrapplib.utils import perf_counter
 from wrapplib.policy import UniformCategoricalPolicy,DiscreteARMPoicy
 class DiscretaARM(object):
-    def __init__(self,arm_cfg,batch_config,device=torch.device("cpu")):
+    def __init__(self,arm_cfg,batch_config,mdoel_dir,device=torch.device("cpu")):
         self._cfg=arm_cfg
         self._batch_cfg = batch_config
 
         self._iteration_num=0
         self._steps_alleps=0
         self._batch_cache=SampleBatchCache(self._cfg["num_cached_batches"])
+        self.model_dir=mdoel_dir
 
 
 
@@ -31,6 +33,9 @@ class DiscretaARM(object):
         self.grad_clip=None
 
         self.device=device
+
+        self.l=0
+        self.t=0
     def reset(self,env,target_v_value_func,prev_ccq_func,prev_v_func,v_func,ccq_func,grad_clip=None):
 
 
@@ -57,13 +62,15 @@ class DiscretaARM(object):
         for w,v in zip(w_p,v_p):
             w.data.copy_(v.data)
 
-    def run(self,env):
-        print("debug : arm: iteration :{} total steps : {}".format(self._iteration_num,self._steps_alleps))
+    def run(self,env,writer):
+        print("-------------------------------------- ** arm: iteration :{} total steps : {} ** -------------------------------------".format(self._iteration_num,self._steps_alleps))
+        vepoch_loss=0
+        qepoch_loss=0
         online_batch=SampleBatch()
         if self._iteration_num==0:#and self._cfg["initialize_uniform"]: 进行rollout收集数据刚开始第一轮迭代，采用随机均匀初始策略
-            online_batch.resample_catagorical(self._batch_cfg,env,self._init_policy)
+            online_batch.resample_catagorical(self._batch_cfg,env,self._init_policy,self._iteration_num,writer)
         else:
-            online_batch.resample_catagorical(self._batch_cfg,env,self._policy)
+            online_batch.resample_catagorical(self._batch_cfg,env,self._policy,self._iteration_num,writer)
         self._batch_cache.append(online_batch)
         self._batch_cache.vectorize_categorical()
 
@@ -97,8 +104,10 @@ class DiscretaARM(object):
         avg_ccq_loss=torch.zeros(1).cuda()
         last_display_iter=0
         last_t=perf_counter()
-
+        self.l=0
         for iter in range(curr_num_arm_iters):
+            self.l+=1
+            self.t+=1
             idx,nstep_idx,observation_ks,observation_kpns,act_idx_ks,v_rets,q_rets,dones=self._batch_cache.sample_minibatch(minibatch_size=minbatch_size,n_steps=n_step,discounted_rate=discount_rate,reward_scale=reward_scale,categorical=True)
             # observation_ks.to(self.device)
             # observation_kpns.to(self.device)
@@ -109,18 +118,22 @@ class DiscretaARM(object):
             v_rets=v_rets.cuda()
             q_rets=q_rets.cuda()
             dones=dones.cuda()
-            target_v_b=self._target_v_fun(observation_kpns)
+            with torch.no_grad():
+                target_v_b=self._target_v_fun(observation_kpns)
             target_v_b=(1-dones)*torch.squeeze(target_v_b,1)
             target_v_value=v_rets+nsteps_discount*target_v_b
             if self._iteration_num==0:
-                target_ccq_k=q_rets+nsteps_discount*target_v_b
+                target_ccq_k=0+q_rets+nsteps_discount*target_v_b
             else:
-                target_ccq_k=torch.clamp(torch.squeeze(torch.gather(self._prev_ccq_fun(observation_ks),1,torch.unsqueeze(act_idx_ks,dim=1)))-torch.squeeze(self._prev_v_fun(observation_ks)),min=0)+q_rets+nsteps_discount*target_v_b
+                with torch.no_grad():
+                    target_ccq_k=torch.clamp(torch.squeeze(torch.gather(self._prev_ccq_fun(observation_ks),1,torch.unsqueeze(act_idx_ks,dim=1)))-torch.squeeze(self._prev_v_fun(observation_ks)),min=0)+q_rets+nsteps_discount*target_v_b
             target_v_value=target_v_value.detach()#将张量从向量图中分离出来
             target_ccq_k=target_ccq_k.detach()
-            print("debug : target_v_k sixe {} target_ccq_k size:{}".format(target_v_value.size(),target_ccq_k.size()))
+            # print("debug : target_v_k sixe {} target_ccq_k size:{}".format(target_v_value.size(),target_ccq_k.size()))
+
 
             self._v_fun.optimizer.zero_grad()
+            self._ccq_fun.optimizer.zero_grad()
             v_loss=self._v_fun.criterion(torch.squeeze(self._v_fun(observation_ks)),target_v_value)
             ccq_loss=self._ccq_fun.criterion(torch.squeeze(torch.gather(self._ccq_fun(observation_ks),1,torch.unsqueeze(act_idx_ks,dim=1))),target_ccq_k)
             v_loss.backward()
@@ -130,16 +143,24 @@ class DiscretaARM(object):
                 torch.nn.utils.clip_grad_norm(self._ccq_fun.parameters(),self.grad_clip)
             self._v_fun.optimizer.step()
             self._ccq_fun.optimizer.step()
+            vepoch_loss+=v_loss.detach().cpu().item()
+            qepoch_loss+=ccq_loss.detach().cpu().item()
 
             self.average_v_para(tua_moving_average)
             avg_v_loss.add_(v_loss)
             avg_ccq_loss.add_(ccq_loss)
 
+            if writer is not None:
+                writer.add_scalar("vloss",avg_v_loss/self.l,self.t)
+                writer.add_scalar("ccqloss",avg_ccq_loss/self.l,self.t)
+
+
+
             if (iter+1)%400==0 or (iter+1)==curr_num_arm_iters:#没个epoch迭代多少个批次; 没400个批次输出一下这400个批次以来的平均损失
                 batch_num_now=iter+1-last_display_iter
                 lap_t=perf_counter()
                 elapsed_s=float(lap_t-last_t)
-                print("debug : arm: iters:{} v_loss : {:.6f},ccq_loss : {:.6f} eplapsed : {:.3f}".format(
+                print("debug : arm: iters:{} v_loss : {:.10f},ccq_loss : {:.10f} eplapsed : {:.3f}".format(
                     iter+1,v_loss.detach().cpu().item()/batch_num_now,ccq_loss.detach().cpu().item()/batch_num_now,elapsed_s
                 ))
 
@@ -151,12 +172,20 @@ class DiscretaARM(object):
         self._iteration_num+=1
         self._steps_alleps+=online_batch.step_count()
 
+
         self.copy_param(self._prev_v_fun,self._v_fun)
         self.copy_param(self._prev_ccq_fun,self._ccq_fun)
 
+        if  (self._iteration_num+1)%15==0:
+            torch.save(self._v_fun.state_dict(),os.path.join(self.model_dir,f"v_model{self._iteration_num}.pth"))
+            torch.save(self._ccq_fun.state_dict(), os.path.join(self.model_dir, f"ccq_model{self._iteration_num}.pth"))
+        print("+++++++++++++++++++++v_epoch_loss++++++++++++++++++++: ",vepoch_loss)
+        print("+++++++++++++++++++++q_epoch_loss++++++++++++++++++++ : ",qepoch_loss)
+        if writer is not None:
+            writer.add_scalar("v_epoch_loss",vepoch_loss,self._iteration_num)
+            writer.add_scalar("ccq_epoch_loss",qepoch_loss,self._iteration_num)
+
         return online_batch.step_count()
-
-
 
 
 

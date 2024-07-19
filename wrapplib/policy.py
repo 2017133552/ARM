@@ -34,21 +34,28 @@ class DiscreteARMPoicy(object):
 
     def __call__(self,obs_buffer,only_action_index=None):
         # if only_action_index is not None:
-        print("debug :  torch observation size : ",obs_buffer.size())
-        print("arm policy : Unkonwn type : ",type(obs_buffer))
+        if isinstance(obs_buffer,np.ndarray):
+            obs_buffer=torch.unsqueeze(torch.from_numpy(obs_buffer), 0)
+            obs_buffer=obs_buffer.cuda()
+            # print("debug :  torch observation size : ",obs_buffer.size())
+        elif isinstance(obs_buffer,torch.FloatTensor):
+            pass
+        else:
+            print("arm policy : Unkonwn type : ",type(obs_buffer))
+            raise  NotImplementedError
         self.ccq_fun.eval()
         self.v_fun.eval()
         with torch.no_grad():
             regrets_vector=torch.clamp(self.ccq_fun(obs_buffer)-self.v_fun(obs_buffer),min=0)
-        regrets=regrets_vector.data.cpu().numpy()
-        sum_regerts=np.sum(regrets,axis=1,keepdims=True)#axis=1 指定在每一行上进行求和操作。keepdims=True 保持求和后的数组的维度，这样结果数组在求和的那个轴上仍然有维度 1，而不是被压缩掉。
+        regrets=regrets_vector.data.cpu()
+        sum_regerts=torch.sum(regrets,axis=1,keepdims=True)#axis=1 指定在每一行上进行求和操作。keepdims=True 保持求和后的数组的维度，这样结果数组在求和的那个轴上仍然有维度 1，而不是被压缩掉。
         if sum_regerts:
-            action_prob_list=regrets/sum_regerts
+            action_prob_list=torch.squeeze(regrets/sum_regerts,dim=0)
         else:
             action_prob_list=torch.full([self.action_dim],1/self.action_dim)
         action=int(torch.multinomial(action_prob_list,1))
 
-        return action_prob_list,action_prob_list
+        return [action],[action_prob_list[action]]
 
 
 

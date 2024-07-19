@@ -4,15 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="500be338-3180-4f12-afdb-c6f775c2ae72" name="Changes" comment="部分可观环境包装（基础版）">
-      <change afterPath="$PROJECT_DIR$/wrapplib/Network.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wrapplib/discreta_arm.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wrapplib/policy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wrapplib/utils.py" afterDir="false" />
+    <list default="true" id="500be338-3180-4f12-afdb-c6f775c2ae72" name="Changes" comment="ARM在部分可观环境的基础训练流程跑通版">
+      <change afterPath="$PROJECT_DIR$/test_atari_arm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train_atari_arm.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_atari_arm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wrapplib/discreta_arm.py" beforeDir="false" afterPath="$PROJECT_DIR$/wrapplib/discreta_arm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wrapplib/policy.py" beforeDir="false" afterPath="$PROJECT_DIR$/wrapplib/policy.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wrapplib/sample.py" beforeDir="false" afterPath="$PROJECT_DIR$/wrapplib/sample.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wrapplib/wrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/wrapplib/wrapper.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +27,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;2017133552&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/2017133552/ARM.git&quot;,
+    &quot;accountId&quot;: &quot;df4cfcd7-b6ef-443a-9080-ca34995062c5&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -42,22 +52,29 @@
   "keyToString": {
     "Python.discreta_arm.executor": "Debug",
     "Python.test.executor": "Run",
-    "Python.train_atari_arm.executor": "Debug",
+    "Python.test_atari_arm.executor": "Run",
+    "Python.train_atari_arm.executor": "Run",
     "Python.wrapper.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "D:/Python_project/ARM/arm-pytorch",
+    "last_opened_file_path": "D:/Python_project/ARM/Armpong",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Python.train_atari_arm">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Python_project\ARM\ARMcoding\model_tase" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.test_atari_arm">
     <configuration name="discreta_arm" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ARMcoding" />
       <option name="ENV_FILES" value="" />
@@ -96,6 +113,29 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_atari_arm" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ARMcoding" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_atari_arm.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -152,10 +192,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test_atari_arm" />
+        <item itemvalue="Python.test" />
         <item itemvalue="Python.train_atari_arm" />
         <item itemvalue="Python.wrapper" />
         <item itemvalue="Python.discreta_arm" />
-        <item itemvalue="Python.test" />
       </list>
     </recent_temporary>
   </component>
@@ -178,7 +219,9 @@
       <workItem from="1720872922639" duration="687000" />
       <workItem from="1720873643723" duration="423000" />
       <workItem from="1720874084117" duration="22555000" />
-      <workItem from="1720952225719" duration="97728000" />
+      <workItem from="1720952225719" duration="98504000" />
+      <workItem from="1721305188197" duration="24626000" />
+      <workItem from="1721381098529" duration="12231000" />
     </task>
     <task id="LOCAL-00001" summary="部分可观环境包装（基础版）">
       <option name="closed" value="true" />
@@ -188,7 +231,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720951861426</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="ARM在部分可观环境的基础训练流程跑通版">
+      <option name="closed" value="true" />
+      <created>1721285778308</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1721285778308</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -199,7 +250,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -207,7 +270,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="部分可观环境包装（基础版）" />
-    <option name="LAST_COMMIT_MESSAGE" value="部分可观环境包装（基础版）" />
+    <MESSAGE value="ARM在部分可观环境的基础训练流程跑通版" />
+    <option name="LAST_COMMIT_MESSAGE" value="ARM在部分可观环境的基础训练流程跑通版" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -219,8 +283,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/wrapplib/discreta_arm.py</url>
-          <line>150</line>
-          <option name="timeStamp" value="41" />
+          <line>179</line>
+          <option name="timeStamp" value="48" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/wrapplib/discreta_arm.py</url>
+          <line>72</line>
+          <option name="timeStamp" value="58" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -240,9 +309,10 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ARMcoding$test.coverage" NAME="test Coverage Results" MODIFIED="1720943251180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ARMcoding$wrapper.coverage" NAME="wrapper Coverage Results" MODIFIED="1721273207028" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/wrapplib" />
+    <SUITE FILE_PATH="coverage/ARMcoding$test.coverage" NAME="test Coverage Results" MODIFIED="1721392944320" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ARMcoding$test_atari_arm.coverage" NAME="test_atari_arm Coverage Results" MODIFIED="1721398341468" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ARMcoding$discreta_arm.coverage" NAME="discreta_arm Coverage Results" MODIFIED="1721225756636" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/wrapplib" />
-    <SUITE FILE_PATH="coverage/ARMcoding$train_atari_arm.coverage" NAME="train_atari_arm Coverage Results" MODIFIED="1721285605587" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ARMcoding$train_atari_arm.coverage" NAME="train_atari_arm Coverage Results" MODIFIED="1721381344376" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

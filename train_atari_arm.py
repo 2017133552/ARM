@@ -7,6 +7,8 @@ import gym
 import torch
 from wrapplib.Network import VNet,CQNet
 from wrapplib.discreta_arm import DiscretaARM,DiscreteARMPoicy
+from torch.utils.tensorboard import SummaryWriter
+import os
 def main():
     if len(sys.argv)>2:
         total_step_limit=int(sys.argv[2])
@@ -19,6 +21,14 @@ def main():
 #     或者是脚本的完整路径，这取决于你如何运行脚本。
     else:
         env_id=("PongNoFrameskip-v4")
+    log_path="log"
+    model_path="model"
+    if not os.path.exists(log_path):
+        os.mkdir(log_path)
+    writer=SummaryWriter(log_path)
+
+    if not os.path.exists(model_path):
+        os.mkdir(model_path)
 
     env=gym.make(env_id,render_mode="rgb_array")#,render_mode="human"
 
@@ -70,18 +80,18 @@ def main():
 
     input_channel=history_len
     action_dim=env.action_space.n
-    device=device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    v_fun=VNet(input_channel,1,device=device)
-    ccq_fun=CQNet(input_channel,action_dim,device=device)
+    device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    v_fun=VNet(input_channel,1,lr=1e-4,device=device)
+    ccq_fun=CQNet(input_channel,action_dim,lr=1e-4,device=device)
     prev_v_fun=VNet(input_channel,1,device=device)
     prev_ccq_fun=CQNet(input_channel,action_dim,device=device)
     target_v_fun=VNet(input_channel,1,device=device)
-    arm=DiscretaARM(arm_config,batch_cfg,device=device)
+    arm=DiscretaARM(arm_config,batch_cfg,model_path,device=device)
     arm.reset(env,target_v_fun,prev_ccq_fun,prev_v_fun,v_fun,ccq_fun,grad_clip)
 
     total_step_counts=0
-    while total_step_counts<=total_step_counts:
-        total_step_counts+=arm.run(env)
+    while total_step_counts<=total_step_counts and arm._iteration_num<=300:
+        total_step_counts+=arm.run(env,writer)
 
 
 

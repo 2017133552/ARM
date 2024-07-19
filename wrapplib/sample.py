@@ -71,7 +71,7 @@ class SampleBatch(object):
 
     def traj_count(self):
         return len(self.trajs)
-    def resample_catagorical(self,batch_cfg,env,cat_policy):
+    def resample_catagorical(self,batch_cfg,env,cat_policy,epoch,writer):
         print("debug : batch: resampling categorical policy...")
         batch_start_t=perf_counter()
         self._step_ct=0
@@ -98,7 +98,7 @@ class SampleBatch(object):
             #
             # observation=pre_torchvision(observation)
             while True:#术语 "simulation steps" 或简称 "sim steps" 常常被用来描述在仿真过程中发生的单个迭代或时间步。每个 simulation step 代表仿真时间中的一个离散单元，在这个时间单元内，系统的状态根据预定义的物理法则、规则或算法进行更新。
-                action_indexl,action_probl=cat_policy(observation)#注意，返回的是一个列表，尽管元素只有一个
+                action_indexl,action_probl=cat_policy(observation)#注意，返回的是一个列表，尽管元素只有一个[0-5]
                 action_index=action_indexl[0]
                 action_prob=float(action_probl[0])
                 observation,reward,terminal,truncated,info=env.step(action_index)#某条轨迹中的一个transition
@@ -118,8 +118,10 @@ class SampleBatch(object):
             print("debug: batch:  traj_index :{} return of this traj:{:.3f}  steps of this traj:{}  steps of all trajs: {} elapsed of this traj: {:.3f} batch eplapsed {:.3f}".format(
                 len(self.trajs),traj.sum_return(),traj.step_count(),self._step_ct,ep_elapsed,elapased_s))
 
-        print("debug: batch: trajs:{} steps of all trajs:{} avg_return:{:.3f} max_return:{:.3f} min_return:{:.3f}  all trajs elapased{:.3f}".format(
+        print("debug: batch: trajs:{} steps of all trajs:{} avg_return:{:.3f} max_return:{:.3f} min_return:{:.3f}  all trajs elapased {:.3f}".format(
             self.traj_count(),self.step_count(),avg_return,max_return,min_return,elapased_s))
+        if writer is not None:
+            writer.add_scalar("return : ",avg_return,epoch)
 
     def is_vectorized(self):
         return self.observation_buffer is not None
@@ -316,7 +318,7 @@ class SampleBatchCache(object):
         return len(self.batches)
 
     def append(self,new_online_batch):
-        while len(self.batches)>self._max_num_batches:#不能大于指定数量的cache，多了要先删去
+        while len(self.batches)>=self._max_num_batches:#不能大于指定数量的cache，多了要先删去
             print("debug : batch cache:drop :trajs:{} steps : {} ".format(self._trajs_count,self._steps_allcount))
             pop_batch=self.batches.pop()
             self._steps_allcount-=pop_batch.step_count()
