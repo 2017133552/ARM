@@ -6,8 +6,8 @@ from wrapplib.wrapper import wrap_atari
 from wrapplib.discreta_arm import DiscreteARMPoicy
 
 def test_model():
-    vmodel_path="model_tase/v_model194.pth"
-    ccq_model_path="model_tase/ccq_model194.pth"
+    vmodel_path="model/v_model299.pth"
+    ccq_model_path="model/ccq_model299.pth"
     history_len=4
     frame_skip=4
     prepro_pong_mask=True
